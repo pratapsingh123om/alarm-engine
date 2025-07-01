@@ -1,6 +1,5 @@
-Below is a comprehensive **README.md** you can include at your project root. It covers your personal motivation, the psychological principle behind the app, all the technologies you’ve used, a summary of features, folder structure, and build/run instructions.
+Below is a comprehensive **README.md**  can include at your project root. It covers our personal motivation, the psychological principle behind the app, all the technologies we’ve used, a summary of features, folder structure, and build/run instructions.
 
-Feel free to tweak any sections to better match your voice or add screenshots and badges as you see fit.
 
 ---
 
