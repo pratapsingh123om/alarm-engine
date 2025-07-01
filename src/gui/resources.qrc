@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC>
+    <qresource prefix="/">
+        <file>../../assets/icons/awakure_icon.png</file>
+        <file>../../assets/fonts/Lexend-VariableFont_wght.ttf</file>
+    </qresource>
+</RCC>

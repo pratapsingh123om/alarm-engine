@@ -1,3 +1,17 @@
+^C:\USERS\GSR33\DEVO\ALARM-ENGINE\BUILD\CMAKEFILES\552E33F5104ED97E06CB56FD22F395DF\QRC_RESOURCES.CPP.RULE
+setlocal
+cd C:\Users\gsr33\devo\alarm-engine\build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autorcc C:/Users/gsr33/devo/alarm-engine/build/CMakeFiles/alarm-engine_autogen.dir/AutoRcc_resources_MXUWEOXILK_Info.json Debug
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
 ^C:\USERS\GSR33\DEVO\ALARM-ENGINE\CMAKELISTS.TXT
 setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/gsr33/devo/alarm-engine -BC:/Users/gsr33/devo/alarm-engine/build --check-stamp-file C:/Users/gsr33/devo/alarm-engine/build/CMakeFiles/generate.stamp

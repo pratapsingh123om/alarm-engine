@@ -1,23 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\src\Alarm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\src\AlarmEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\src\WakeTask.cpp">
+    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\build\alarm-engine_autogen\mocs_compilation_Debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\src\gui\MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\build\alarm-engine_autogen\MXUWEOXILK\qrc_resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\build\alarm-engine_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\build\alarm-engine_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\build\alarm-engine_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="C:\Users\gsr33\devo\alarm-engine\src\gui\MainWindow.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\gsr33\devo\alarm-engine\build\CMakeFiles\552e33f5104ed97e06cb56fd22f395df\qrc_resources.cpp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
     <CustomBuild Include="C:\Users\gsr33\devo\alarm-engine\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="C:\Users\gsr33\devo\alarm-engine\src\gui\resources.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{2744A8C3-540C-32B9-9B7E-6973014DF32D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{9AA292B9-4592-3DB8-8600-9FFA2BE4BA05}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{4DB226BA-0BB9-3253-BE07-4F4EA4FA7B69}</UniqueIdentifier>
     </Filter>

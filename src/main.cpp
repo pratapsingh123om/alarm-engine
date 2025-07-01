@@ -1,41 +1,18 @@
-#include "AlarmEngine.hpp"
-#include <iostream>
+#include "MainWindow.hpp"
+#include <QApplication>
 
-int main()
+int main(int argc, char *argv[])
 {
-    AlarmEngine engine;
-    int choice;
+    QApplication app(argc, argv);
 
-    while (true)
-    {
-        std::cout << "\n=== Alarm Menu ===\n";
-        std::cout << "1. Set new alarm\n";
-        std::cout << "2. View alarms\n";
-        std::cout << "3. Delete an alarm\n";
-        std::cout << "4. Run alarms\n";
-        std::cout << "0. Exit\n";
-        std::cout << "Choice: ";
-        std::cin >> choice;
+    // Optional: load font
+    QFontDatabase::addApplicationFont(":/../../assets/fonts/Lexend-Regular.ttf");
+    QApplication::setFont(QFont("Lexend", 10));
 
-        switch (choice)
-        {
-        case 1:
-            engine.setAlarm();
-            break;
-        case 2:
-            engine.viewAlarms();
-            break;
-        case 3:
-            engine.deleteAlarm();
-            break;
-        case 4:
-            engine.runAlarms();
-            break;
-        case 0:
-            return 0;
-        default:
-            std::cout << "❌ Invalid choice.\n";
-            break;
-        }
-    }
+    MainWindow w;
+    w.setWindowTitle("Awakure Alarm");
+    w.setWindowIcon(QIcon(":/../../assets/icons/awakure_icon.png"));
+    w.show();
+
+    return app.exec();
 }
