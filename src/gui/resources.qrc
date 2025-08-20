@@ -3,5 +3,8 @@
     <qresource prefix="/">
         <file>../../assets/icons/awakure_icon.png</file>
         <file>../../assets/fonts/Lexend-VariableFont_wght.ttf</file>
+        <file alias="web/index.html">../../assets/web/index.html</file>
+        <file alias="web/style.css">../../assets/web/style.css</file>
+        <file alias="web/app.js">../../assets/web/app.js</file>
     </qresource>
 </RCC>

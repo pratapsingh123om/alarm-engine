@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Awakure (Preview)</title>
+    <style>
+      :root {
+        --bg: #0f1115;
+        --panel: #1a1d24;
+        --text: #e5e7eb;
+        --muted: #9aa3b2;
+        --accent: #4f46e5;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: Inter, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
+      .app { max-width: 960px; margin: 0 auto; padding: 24px; }
+      header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+      .logo-circle { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; font-weight: 700; }
+      main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      section { background: var(--panel); border-radius: 12px; padding: 16px; }
+      h1, h2 { margin: 0; }
+      .controls { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+      input { background: #0b0d11; border: 1px solid #2a2e36; border-radius: 8px; padding: 8px 10px; color: var(--text); min-width: 0; }
+      button { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+      button.secondary { background: #2a2e36; }
+      ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+      li { background: #0b0d11; border: 1px solid #2a2e36; border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .item-left { display: flex; align-items: center; gap: 10px; }
+      .time { font-weight: 600; }
+      .label { color: var(--muted); }
+      .actions { display: flex; gap: 8px; }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div class="logo-circle">A</div>
+        <h1>Awakure</h1>
+      </header>
+
+      <main>
+        <section class="alarms">
+          <h2>Alarms</h2>
+          <div class="controls">
+            <input id="alarm-hour" type="number" min="0" max="23" placeholder="HH" />
+            <input id="alarm-minute" type="number" min="0" max="59" placeholder="MM" />
+            <input id="alarm-label" type="text" placeholder="Label" />
+            <button id="add-alarm">Add Alarm</button>
+          </div>
+          <ul id="alarms-list"></ul>
+        </section>
+
+        <section class="tasks">
+          <h2>Tasks</h2>
+          <div class="controls">
+            <input id="task-text" type="text" placeholder="Add a task" />
+            <button id="add-task">Add Task</button>
+            <button id="speak">Speak Tasks</button>
+          </div>
+          <ul id="tasks-list"></ul>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const STORE_KEY = 'awakure_preview_state';
+      const state = (function loadState() {
+        try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch { return null; }
+      })() || {
+        alarms: [{ hour: 7, minute: 0, label: 'Wake up' }, { hour: 7, minute: 30, label: 'Workout' }],
+        tasks: ['Drink water', '5-min stretch', 'Check calendar']
+      };
+      function saveState() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch {} }
+      const pad2 = n => String(n).padStart(2, '0');
+
+      function renderAlarms() {
+        const list = document.getElementById('alarms-list'); list.innerHTML = '';
+        state.alarms.forEach((a, idx) => {
+          const li = document.createElement('li');
+
+          const left = document.createElement('div'); left.className = 'item-left';
+          const time = document.createElement('span'); time.className = 'time'; time.textContent = `${pad2(a.hour)}:${pad2(a.minute)}`;
+          const label = document.createElement('span'); label.className = 'label'; label.textContent = a.label ? `• ${a.label}` : '';
+          left.append(time, label);
+
+          const actions = document.createElement('div'); actions.className = 'actions';
+          const test = document.createElement('button'); test.className = 'secondary'; test.textContent = 'Test'; test.onclick = () => simulateAlarm(a);
+          const del = document.createElement('button'); del.textContent = 'Delete'; del.onclick = () => { state.alarms.splice(idx, 1); saveState(); renderAlarms(); };
+          actions.append(test, del);
+
+          li.append(left, actions);
+          list.appendChild(li);
+        });
+      }
+
+      function renderTasks() {
+        const list = document.getElementById('tasks-list'); list.innerHTML = '';
+        state.tasks.forEach((t, idx) => {
+          const li = document.createElement('li');
+          const left = document.createElement('div'); left.className = 'item-left';
+          const txt = document.createElement('span'); txt.textContent = t;
+          left.append(txt);
+
+          const actions = document.createElement('div'); actions.className = 'actions';
+          const del = document.createElement('button'); del.textContent = 'Delete'; del.onclick = () => { state.tasks.splice(idx, 1); saveState(); renderTasks(); };
+          actions.append(del);
+
+          li.append(left, actions);
+          list.appendChild(li);
+        });
+      }
+
+      function simulateAlarm(a) {
+        alert('Alarm ' + pad2(a.hour) + ':' + pad2(a.minute) + '!');
+        speakTasks();
+      }
+
+      function speakTasks() {
+        var text = state.tasks.length === 0
+          ? 'Good morning! You have no tasks.'
+          : 'Good morning! Here are your tasks: ' + state.tasks.map(function(t, i) { return (i + 1) + '. ' + t + '.'; }).join(' ');
+        if ('speechSynthesis' in window) {
+          var u = new SpeechSynthesisUtterance(text);
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(u);
+        } else {
+          alert(text);
+        }
+      }
+
+      function wire() {
+        document.getElementById('add-alarm').onclick = () => {
+          const hour = Math.max(0, Math.min(23, parseInt(document.getElementById('alarm-hour').value || '0', 10)));
+          const minute = Math.max(0, Math.min(59, parseInt(document.getElementById('alarm-minute').value || '0', 10)));
+          const label = document.getElementById('alarm-label').value || '';
+          state.alarms.push({ hour, minute, label });
+          saveState(); renderAlarms();
+          document.getElementById('alarm-hour').value = '';
+          document.getElementById('alarm-minute').value = '';
+          document.getElementById('alarm-label').value = '';
+        };
+        document.getElementById('add-task').onclick = () => {
+          const text = (document.getElementById('task-text').value || '').trim();
+          if (!text) return;
+          state.tasks.push(text);
+          saveState(); renderTasks();
+          document.getElementById('task-text').value = '';
+        };
+        document.getElementById('speak').onclick = speakTasks;
+      }
+
+      wire();
+      renderAlarms();
+      renderTasks();
+    </script>
+  </body>
+</html>

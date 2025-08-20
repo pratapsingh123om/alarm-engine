@@ -1,180 +1,92 @@
-Below is a comprehensive **README.md** . It covers our personal motivation, the psychological principle behind the app, all the technologies we’ve used, a summary of features, folder structure, and build/run instructions.
-
-(https://github.com/user-attachments/assets/a4bcb699-b260-4fa0-bb35-5b11284f8e77)
-
----
-
-```markdown
-# Awakure – A Smarter, Hard‑to‑Ignore Morning Alarm  
+# Awakure – A Smarter, Hard‑to‑Ignore Morning Alarm
 
 ![Awakure Logo](assets/icons/awakure_icon.png)
 
-## 🚀 Motivation & Problem Statement
+Awakure helps you wake up with intention by combining a quick cognitive nudge and a spoken rundown of your morning to‑dos.
 
-> **“Why is it so easy to hit snooze—day after day—when the world needs us to wake up on time?”**
+### What changed recently
+- The UI is now built with HTML/CSS/JavaScript and embedded inside the desktop app via Qt WebEngine.
+- JS ↔ C++ communication uses Qt WebChannel through a small C++ bridge (`src/gui/Bridge.*`).
+- The build supports both Qt 6 and Qt 5 (5.15+) depending on what you have installed.
+- A standalone browser preview is available at `test/preview.html`.
 
-For years, I—and my family—struggled with the **snooze trap**. No matter how early we set our alarms, we’d drift back to sleep rather than start our day. Yet, when there’s a truly “big event” (a flight, an exam, meeting someone important), we spring awake without a second thought.  
+## Technology Stack
+- Core: C++17
+- Desktop host: Qt Widgets
+- Embedded web UI: HTML/CSS/JavaScript via Qt WebEngine
+- JS↔C++ bridge: Qt WebChannel
+- Audio/Text‑to‑Speech: Qt Multimedia, Qt TextToSpeech
+- Build: CMake 3.16+, MSVC/Clang/GCC, Ninja (optional)
+- Dependency manager (optional): vcpkg
 
-I discovered that two forces wake us reliably:
-1. **Immediate mental engagement** (a puzzle, a challenge)  
-2. **Intrinsic motivation** (something we truly care about)
+## Features
+- Multiple alarms with hour:minute and label
+- Daily re‑scheduling of alarms
+- To‑do list with add/remove
+- Text‑to‑Speech reads your tasks when an alarm fires or on demand
+- Modern web UI embedded in a native window
 
-**Awakure** combines both by:
-- Pushing your brain to solve a quick problem (math, pattern, or custom “wake‑task”)  
-- Announcing your day’s **to‑do list** via Text‑to‑Speech  
+Note: The earlier “wake‑challenge” puzzle is planned and not active in the current build.
 
-This leverages **cognitive arousal** and **purpose‑driven motivation** to break the snooze habit.
-
----
-
-## 🧠 Psychology of Waking Up
-
-1. **Cognitive Activation**: Simple math or pattern recognition wakes prefrontal cortex, halting the sleep inertia loop.  
-2. **Purpose Anchoring**: Hearing your own tasks reminds you of real‑world stakes.  
-3. **Habit Disruption**: By removing the autopilot of snooze, you build a new ritual of waking with intention.
-
----
-
-## 🌐 Technology Stack
-
-| Layer                   | Technology                                                                 |
-|-------------------------|----------------------------------------------------------------------------|
-| **Core Logic**          | C++17                                                                      |
-| **GUI**                 | Qt6 Widgets + Qt Quick (future)                                             |
-| **Audio & Multimedia**  | Qt6 Multimedia (QSoundEffect/QMediaPlayer)                                  |
-| **Text‑to‑Speech**      | Qt6 TextToSpeech                                                           |
-| **Task & Alarm Storage**| JSON files / QSettings                                                     |
-| **Python Scripting**    | Spotipy (Spotify API) + Flask (optional web callback)                      |
-| **Build System**        | CMake + vcpkg                                                              |
-| **Version Control**     | Git                                                                        |
-
----
-
-## 🌟 Key Features
-
-1. **Multiple Alarms**  
-   - Set and name multiple alarms  
-   - Daily, weekdays, weekends, or one‑off  
-2. **Wake‑Challenge**  
-   - Solve a quick math puzzle to dismiss  
-3. **To‑Do Announcement**  
-   - Enter your morning tasks  
-   - First alarm triggers a spoken list via `QTextToSpeech`  
-4. **Persistent Storage**  
-   - Alarms and tasks saved in JSON for next launch  
-5. **Custom Sound & Icon**  
-   - Embeds your own MP3/WAV ringtone  
-   - App icon and UI font bundled in Qt Resource File (`.qrc`)  
-6. **Modern GUI**  
-   - Dark theme, custom font (Lexend)  
-   - Bottom navigation for “Alarm” vs “To‑Do”  
-
----
-
-## 📁 Folder Structure
-
+## Folder Structure
 ```
-
 alarm-engine/
 ├── assets/
 │   ├── icons/
-│   │   └── awakure\_icon.png
-│   └── fonts/
-│       └── Lexend-VariableFont\_wght.ttf
+│   ├── fonts/
+│   └── web/            # HTML/CSS/JS used by the embedded web view
 ├── src/
 │   ├── main.cpp
-│   ├── alarms/
-│   │   ├── AlarmManager.hpp/.cpp
-│   ├── todo/
-│   │   ├── Todolist.hpp/.cpp
-│   └── gui/
-│       ├── MainWindow\.ui
-│       ├── MainWindow\.hpp/.cpp
-│       └── resources.qrc
+│   ├── gui/
+│   │   ├── MainWindow.hpp/.cpp
+│   │   ├── Bridge.hpp/.cpp
+│   │   └── resources.qrc
+│   ├── todo/           # Simple C++ models for tasks
+│   └── Alarm*.{hpp,cpp}
+├── test/               # Standalone browser preview (preview.html)
 ├── CMakeLists.txt
-├── README.md
-└── build/ (out‑of‑source build)
-
-````
-
----
-
-## 🛠️ Build & Run
-
-### Prerequisites
-
-1. **Install Qt6** via **vcpkg**:
-   ```bash
-   git clone https://github.com/Microsoft/vcpkg.git
-   cd vcpkg
-   .\bootstrap-vcpkg.bat
-   .\vcpkg integrate install
-   .\vcpkg install qt6:x64-windows
-````
-
-2. **Clone this repo** and create a build folder:
-
-   ```bash
-   git clone https://github.com/yourusername/awakure.git
-   cd awakure
-   mkdir build && cd build
-   ```
-3. **Configure & build**:
-
-   ```bash
-   cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
-   cmake --build .
-   ```
-
-### Run
-
-```bash
-./awakure.exe
+└── build/              # Out‑of‑source build
 ```
 
----
+## Build & Run (Windows)
+Prerequisites:
+- CMake 3.16+
+- C++ compiler (Visual Studio 2019/2022 or Build Tools)
+- Qt 6.x or Qt 5.15+ with modules: Widgets, Multimedia, TextToSpeech, WebEngineWidgets, WebChannel
+- Optional: Ninja, vcpkg
 
-## 🧩 How It Works
-
-1. **Alarm Tab**:
-
-   * Tap “Add Alarm” → pick time + label + repeat.
-   * Alarms saved in JSON and listed with enable toggles.
-
-2. **To‑Do Tab**:
-
-   * Tap “Add Task” → enter your morning to‑dos.
-   * Tasks stored persistently.
-
-3. **Morning Routine**:
-
-   * At the first active alarm of the day, `QTextToSpeech` reads out your tasks.
-   * To dismiss the alarm, solve a simple math puzzle—activating your brain instantly.
-
----
-
-## 🚀 Extensions & Roadmap
-
-* **Recurring schedules**: Weekly rhythms, custom date ranges
-* **Smart analytics**: Track wake‑up success rate, habit streaks
-* **Mobile ports**: Android/iOS via Qt Mobile or Flutter bridge
-* **Voice recognition**: Say “stop” to dismiss (using speech‑to‑text)
-
----
-
-## 📓 License & Acknowledgements
-
-* **Awakure** is © 2025 by \[Gajendra Singh Rana]. All rights reserved.
-* Icons and fonts licensed under their respective open licenses.
-* Built with ❤️ using Qt and modern C++.
-
----
-
-Thank you for exploring **Awakure**—the alarm that **wakes your mind** and **fuels your purpose**. Feel free to contribute, file issues, and suggest features!
-
+Configure (pick one):
+1) System Qt (provide your Qt CMake prefix path):
+```powershell
+cmake -S . -B build -G "Ninja" -DCMAKE_PREFIX_PATH="C:/Qt/6.6.0/msvc2019_64"
+```
+2) vcpkg:
+```powershell
+cmake -S . -B build -G "Ninja" -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows
 ```
 
----
-
-Feel free to adjust any descriptions, paths, or examples to match your exact implementation. This README not only shows **how to build and run** but also **why** you built it and **how** each technology contributes to solving the snooze problem.
+Build:
+```powershell
+cmake --build build --config Release
 ```
+
+Run:
+```powershell
+build/Release/alarm-engine.exe
+```
+
+## Web UI Preview (no C++ required)
+Open `test/preview.html` in a modern browser to try the UI and speech preview (uses Web Speech API). This is a mock preview that stores state in `localStorage`.
+
+## How It Works
+- `MainWindow` hosts a `QWebEngineView` and loads `qrc:/web/index.html` from the Qt resource file.
+- A `QWebChannel` exposes a `Bridge` object to JavaScript as `bridge`.
+- The bridge manages in‑memory alarms and tasks, schedules `QTimer`s for alarms, emits updates to the UI, and invokes `QTextToSpeech` to read tasks.
+
+## Roadmap
+- Wake‑challenge mini‑puzzle before dismissing an alarm
+- Persistent storage (JSON/QSettings)
+- Mobile ports via Qt for Android/iOS
+
+## License & Credits
+© 2025 Gajendra Singh Rana. Icons and fonts are under their respective licenses. Built with Qt and modern C++.

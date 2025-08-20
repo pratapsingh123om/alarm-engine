@@ -3,13 +3,8 @@
 #include <QMainWindow>
 #include <QTime>
 #include <QTextToSpeech>
-
-QT_BEGIN_NAMESPACE
-namespace Ui
-{
-    class MainWindow;
-}
-QT_END_NAMESPACE
+#include <QWebEngineView>
+#include <QWebChannel>
 
 class MainWindow : public QMainWindow
 {
@@ -19,11 +14,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
-    void onAddAlarm();
-    void onAddTask();
-
 private:
-    Ui::MainWindow *ui;
     QTextToSpeech *tts;
+    QWebEngineView *webView;
+    QWebChannel *webChannel;
 };
