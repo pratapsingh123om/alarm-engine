@@ -1,5 +1,5 @@
-#ifndef WAKE_TASK_HPP
-#define WAKE_TASK_HPP
+#ifndef WAKETASK_HPP
+#define WAKETASK_HPP
 
 class WakeTask
 {
@@ -7,4 +7,4 @@ public:
     bool runTask();
 };
 
-#endif
+#endif // WAKETASK_HPP

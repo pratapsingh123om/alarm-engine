@@ -15,7 +15,7 @@ Awakure helps you wake up with intention by combining a quick cognitive nudge an
 - Desktop host: Qt Widgets
 - Embedded web UI: HTML/CSS/JavaScript via Qt WebEngine
 - JS↔C++ bridge: Qt WebChannel
-- Audio/Text‑to‑Speech: Qt Multimedia, Qt TextToSpeech
+- Audio/Text‑to‑Speech: Qt TextToSpeech
 - Build: CMake 3.16+, MSVC/Clang/GCC, Ninja (optional)
 - Dependency manager (optional): vcpkg
 
@@ -49,10 +49,15 @@ alarm-engine/
 ```
 
 ## Build & Run (Windows)
+Feature toggles (CMake options):
+- ENABLE_WEB_UI=ON|OFF (default ON)
+- ENABLE_TTS=ON|OFF (default ON)
+- BUILD_TESTS=ON|OFF (default ON; builds only if TestSprite is found)
+
 Prerequisites:
 - CMake 3.16+
 - C++ compiler (Visual Studio 2019/2022 or Build Tools)
-- Qt 6.x or Qt 5.15+ with modules: Widgets, Multimedia, TextToSpeech, WebEngineWidgets, WebChannel
+- Qt 6.x or Qt 5.15+ with modules: Widgets, TextToSpeech, WebEngineWidgets, WebChannel
 - Optional: Ninja, vcpkg
 
 Configure (pick one):

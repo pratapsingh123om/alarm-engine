@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awakure Alarm & To-Do Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        .alarm-time {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+        
+        .ampm {
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
+        
+        select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info" id="debugInfo">
+        Loading...
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>Awakure Alarm</h1>
+            <p class="subtitle">Integrated Alarm System with To-Do Dashboard</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="alarm-section">
+                <h2 class="section-title">Alarms</h2>
+                
+                <div class="alarm-form">
+                    <h3>Add New Alarm</h3>
+                    <div class="form-group">
+                        <label for="hour">Hour (1-12):</label>
+                        <input type="number" id="hour" min="1" max="12" value="7">
+                    </div>
+                    <div class="form-group">
+                        <label for="minute">Minute (0-59):</label>
+                        <input type="number" id="minute" min="0" max="59" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="ampm">AM/PM:</label>
+                        <select id="ampm">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="label">Label:</label>
+                        <input type="text" id="label" placeholder="Alarm label">
+                    </div>
+                    <button id="addAlarmBtn">Add Alarm</button>
+                </div>
+                
+                <h3>Active Alarms</h3>
+                <div class="alarm-list" id="alarmList">
+                    <!-- Alarms will be populated here -->
+                </div>
+                
+                <div class="music-controls">
+                    <h3>Music Selection</h3>
+                    <div class="music-options">
+                        <button class="music-btn" id="localMusicBtn">Select Local Music</button>
+                        <button class="music-btn" id="spotifyConnectBtn">Connect to Spotify</button>
+                    </div>
+                    <div class="current-track" id="currentTrack">No track selected</div>
+                </div>
+            </div>
+            
+            <div class="dashboard-section">
+                <h2 class="section-title">To-Do Dashboard</h2>
+                <p>Manage your tasks and they will be announced when alarms ring</p>
+                
+                <div class="task-input">
+                    <input type="text" id="taskInput" placeholder="Enter a new task...">
+                    <button id="addTaskBtn">Add Task</button>
+                </div>
+                
+                <div class="task-list" id="taskList">
+                    <!-- Tasks will be populated here -->
+                </div>
+                
+                <div class="stats">
+                    <p>Completed: <span id="completedCount">0</span> / <span id="totalCount">0</span> tasks</p>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button class="test-btn" id="testAlarmBtn">Test Alarm Sound</button>
+                    <button class="test-btn" id="testTTSBtn">Test Task Announcement</button>
+                    <button class="test-btn" id="openTodoBtn">Open Full Dashboard</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Awakure Alarm System | Integrated Alarm and To-Do Dashboard</p>
+        </footer>
+    </div>
+
+    <script src="qwebchannel.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

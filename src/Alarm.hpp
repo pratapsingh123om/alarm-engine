@@ -1,17 +1,23 @@
-#pragma once
+#ifndef ALARM_HPP
+#define ALARM_HPP
+
 #include <string>
 
 class Alarm
 {
 public:
-    Alarm(int h, int m, const std::string &lbl);
-    int getHour() const;
-    int getMinute() const;
-    std::string getLabel() const;
-    bool shouldTrigger(int currentHour, int currentMinute) const;
+    Alarm() = default;
+    Alarm(int h, int m, const std::string &lbl)
+        : hour(h), minute(m), label(lbl) {}
+
+    int getHour() const { return hour; }
+    int getMinute() const { return minute; }
+    const std::string &getLabel() const { return label; }
 
 private:
-    int hour;
-    int minute;
+    int hour = 0;
+    int minute = 0;
     std::string label;
 };
+
+#endif // ALARM_HPP

@@ -1,51 +1,88 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\build\alarm-engine_autogen\mocs_compilation_Debug.cpp">
+    <ClCompile Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\mocs_compilation_Debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\src\main.cpp">
+    <ClCompile Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\Alarm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\src\gui\MainWindow.cpp">
+    <ClCompile Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\AlarmAPI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\build\alarm-engine_autogen\MXUWEOXILK\qrc_resources.cpp">
+    <ClCompile Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\AlarmEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\build\alarm-engine_autogen\mocs_compilation_Release.cpp">
+    <ClCompile Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\build\alarm-engine_autogen\mocs_compilation_MinSizeRel.cpp">
+    <ClCompile Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\WakeTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\gsr33\devo\alarm-engine\build\alarm-engine_autogen\mocs_compilation_RelWithDebInfo.cpp">
+    <ClCompile Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\mocs_compilation_RelWithDebInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\gsr33\devo\alarm-engine\src\gui\MainWindow.hpp">
+    <ClInclude Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\Alarm.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\AlarmAPI.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\AlarmEngine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\MainWindow.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\WakeTask.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\include_Debug\src\ui_MainWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\include_Release\src\ui_MainWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\include_MinSizeRel\src\ui_MainWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\include_RelWithDebInfo\src\ui_MainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\gsr33\devo\alarm-engine\build\CMakeFiles\552e33f5104ed97e06cb56fd22f395df\qrc_resources.cpp.rule">
+    <CustomBuild Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\CMakeFiles\0ed765f3ca8865245bc0eb0dfb36fa86\autouic_(CONFIG).stamp.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="C:\Users\gsr33\devo\alarm-engine\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\gsr33\alarm-engine\alarm-engine\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Users\gsr33\devo\alarm-engine\src\gui\resources.qrc" />
+    <None Include="C:\Users\gsr33\alarm-engine\alarm-engine\src\MainWindow.ui" />
+    <None Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\autouic_Debug.stamp" />
+    <None Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\autouic_Release.stamp" />
+    <None Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\autouic_MinSizeRel.stamp" />
+    <None Include="C:\Users\gsr33\alarm-engine\alarm-engine\build\alarm-engine_autogen\autouic_RelWithDebInfo.stamp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{2744A8C3-540C-32B9-9B7E-6973014DF32D}</UniqueIdentifier>
+      <UniqueIdentifier>{4454EEDA-9C56-35DA-A8A8-ABE04160528F}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{9AA292B9-4592-3DB8-8600-9FFA2BE4BA05}</UniqueIdentifier>
+      <UniqueIdentifier>{9294E38B-08FC-3D26-8E0C-BD57E1A1AA55}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{4DB226BA-0BB9-3253-BE07-4F4EA4FA7B69}</UniqueIdentifier>
+      <UniqueIdentifier>{D72756A4-C6BC-38D6-A35E-D0A1AC5243BE}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
