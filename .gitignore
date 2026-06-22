@@ -10,13 +10,6 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-dist-web
-dist_old_*
-win-unpacked
-*.exe
-*.7z
-*.apk
-venv/
 *.local
 
 # Editor directories and files
