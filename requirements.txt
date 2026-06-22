@@ -1,4 +1,0 @@
-spotipy>=2.23.0
-requests>=2.31.0
-pygame==2.1.2
-comtypes==1.1.14

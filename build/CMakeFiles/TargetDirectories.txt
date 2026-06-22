@@ -1,4 +1,0 @@
-C:/Users/gsr33/alarm-engine/alarm-engine/build/CMakeFiles/alarm-engine.dir
-C:/Users/gsr33/alarm-engine/alarm-engine/build/CMakeFiles/copy-resources-manually.dir
-C:/Users/gsr33/alarm-engine/alarm-engine/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/gsr33/alarm-engine/alarm-engine/build/CMakeFiles/ZERO_CHECK.dir
