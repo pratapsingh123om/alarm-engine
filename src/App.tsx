@@ -9,7 +9,7 @@ import { alarmBridge } from './services/alarmBridge';
 import type { Alarm } from './services/alarmBridge';
 import { soundPlayer } from './services/soundPlayer';
 import { ttsBridge } from './services/ttsBridge';
-import { LocalNotifications } from '@capacitor/local-notifications';
+import { AlarmNotification } from '@scalejet/capacitor-alarm-notification';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'alarms' | 'tasks' | 'music'>('alarms');
@@ -34,39 +34,56 @@ export const App: React.FC = () => {
       }
     } catch(e) {}
 
-    // Setup LocalNotifications listener for Android background alarms
+    // Setup Native Alarm listener and Missed Alarm Diagnostics
     try {
       if ((window as any).Capacitor?.isNative) {
-        LocalNotifications.requestPermissions();
+        AlarmNotification.checkPermission().then((res: any) => {
+          if (!res.hasPermission) AlarmNotification.requestPermission();
+        });
         
-        LocalNotifications.addListener('localNotificationActionPerformed', async (notification) => {
-          const alarmId = notification.notification.extra?.alarmId;
-          if (alarmId) {
-            const alarms = await alarmBridge.getAlarms();
-            const ringing = alarms.find(a => a.id === alarmId);
-            if (ringing) {
-              setActiveAlarm(ringing);
-              const musicUrl = ringing.soundUrl || localStorage.getItem('awakure_music_url') || undefined;
-              soundPlayer.playAlarm(musicUrl);
+        AlarmNotification.addListener('alarmAction', async (data: any) => {
+          if (data.action === 'open' || data.action === 'dismiss' || data.action === 'snooze') {
+            const alarmId = data.notificationId || data.id;
+            if (alarmId) {
+              const alarms = await alarmBridge.getAlarms();
+              const ringing = alarms.find(a => a.id === alarmId);
+              if (ringing) {
+                setActiveAlarm(ringing);
+                const musicUrl = ringing.soundUrl || localStorage.getItem('awakure_music_url') || undefined;
+                soundPlayer.playAlarm(musicUrl);
+              }
             }
           }
         });
 
-        LocalNotifications.addListener('localNotificationReceived', async (notification) => {
-          const alarmId = notification.extra?.alarmId;
-          if (alarmId) {
-            const alarms = await alarmBridge.getAlarms();
-            const ringing = alarms.find(a => a.id === alarmId);
-            if (ringing) {
-              setActiveAlarm(ringing);
-              const musicUrl = ringing.soundUrl || localStorage.getItem('awakure_music_url') || undefined;
-              soundPlayer.playAlarm(musicUrl);
+        // Diagnostics: Check if Android killed a past alarm
+        setTimeout(async () => {
+          const alarms = await alarmBridge.getAlarms();
+          const now = new Date();
+          let missed = false;
+          let missedLabel = '';
+          
+          for (const a of alarms) {
+            if (a.active) {
+              let targetDate = new Date();
+              targetDate.setHours(a.hour, a.minute, 0, 0);
+              
+              const diffMs = now.getTime() - targetDate.getTime();
+              // If it passed today by more than 2 minutes and wasn't cleared, Android killed the alarm intent.
+              if (diffMs > 2 * 60 * 1000 && diffMs < 12 * 60 * 60 * 1000) {
+                missed = true;
+                missedLabel = a.label;
+              }
             }
           }
-        });
+
+          if (missed) {
+            alert(`⚠️ DIAGNOSTIC ERROR: Your alarm "${missedLabel}" was blocked by Android Battery Optimization!\n\nTo ensure alarms ring when the screen is locked: Go to Settings -> Apps -> Awakure -> Battery -> Choose "Unrestricted" AND ensure Exact Alarms are granted.`);
+          }
+        }, 3000);
       }
     } catch(e) {
-      console.error('LocalNotifications setup failed:', e);
+      console.error('AlarmNotification setup failed:', e);
     }
 
     return () => {

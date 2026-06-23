@@ -12,7 +12,7 @@ export interface Alarm {
   soundUrl?: string;       // Custom ringtone URL
 }
 
-import { LocalNotifications } from '@capacitor/local-notifications';
+import { AlarmNotification } from '@scalejet/capacitor-alarm-notification';
 
 const ALARMS_KEY = 'awakure_alarms';
 
@@ -74,32 +74,32 @@ export const alarmBridge = {
     const platform = getPlatform();
     if (platform === 'android') {
       try {
-        // Cancel existing notification first if updating
-        const numId = parseInt(alarm.id.replace(/\D/g, '').slice(0, 8)) || 0;
-        await LocalNotifications.cancel({ notifications: [{ id: numId }] });
+        // The scalejet plugin cancelAlarm cancels all alarms. We resync them all.
+        await AlarmNotification.cancelAlarm();
         
-        if (alarm.active) {
-          const now = new Date();
-          let targetDate = new Date();
-          targetDate.setHours(alarm.hour, alarm.minute, 0, 0);
-          
-          if (targetDate.getTime() <= now.getTime()) {
-            targetDate.setDate(targetDate.getDate() + 1);
-          }
-          
-          await LocalNotifications.schedule({
-            notifications: [{
+        const now = new Date();
+        for (const a of alarms) {
+          if (a.active) {
+            let targetDate = new Date();
+            targetDate.setHours(a.hour, a.minute, 0, 0);
+            
+            if (targetDate.getTime() <= now.getTime()) {
+              targetDate.setDate(targetDate.getDate() + 1);
+            }
+            
+            const delayMs = targetDate.getTime() - now.getTime();
+            
+            await AlarmNotification.setAlarm({
+              delay: delayMs,
               title: 'Awakure Alarm',
-              body: `Tap to wake up for: ${alarm.label}`,
-              id: numId,
-              schedule: { at: targetDate, repeats: alarm.repeat, every: alarm.repeat ? 'day' : undefined, allowWhileIdle: true },
-              extra: { alarmId: alarm.id },
-              actionTypeId: ''
-            }]
-          });
+              message: a.label || 'Time to wake up!',
+              id: a.id,
+              openButtonText: 'Wake Up!'
+            });
+          }
         }
       } catch (e) {
-        console.error('Failed to schedule local notification:', e);
+        console.error('Failed to schedule alarm via AlarmNotification:', e);
       }
     } else if (platform === 'desktop') {
       // Notify Tauri Rust background task
@@ -122,10 +122,31 @@ export const alarmBridge = {
     const platform = getPlatform();
     if (platform === 'android') {
       try {
-        const numId = parseInt(id.replace(/\D/g, '').slice(0, 8)) || 0;
-        await LocalNotifications.cancel({ notifications: [{ id: numId }] });
+        await AlarmNotification.cancelAlarm();
+        
+        // Reschedule remaining active alarms
+        const now = new Date();
+        for (const a of updated) {
+          if (a.active) {
+            let targetDate = new Date();
+            targetDate.setHours(a.hour, a.minute, 0, 0);
+            
+            if (targetDate.getTime() <= now.getTime()) {
+              targetDate.setDate(targetDate.getDate() + 1);
+            }
+            
+            const delayMs = targetDate.getTime() - now.getTime();
+            await AlarmNotification.setAlarm({
+              delay: delayMs,
+              title: 'Awakure Alarm',
+              message: a.label || 'Time to wake up!',
+              id: a.id,
+              openButtonText: 'Wake Up!'
+            });
+          }
+        }
       } catch (e) {
-        console.error('Failed to cancel local notification on Android:', e);
+        console.error('Failed to cancel/resync alarm on Android:', e);
       }
     } else if (platform === 'desktop') {
       try {
