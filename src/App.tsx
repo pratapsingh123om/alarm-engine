@@ -10,6 +10,7 @@ import type { Alarm } from './services/alarmBridge';
 import { soundPlayer } from './services/soundPlayer';
 import { ttsBridge } from './services/ttsBridge';
 import { AlarmNotification } from '@scalejet/capacitor-alarm-notification';
+import { PermissionsModal } from './components/PermissionsModal';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'alarms' | 'tasks' | 'music'>('alarms');
@@ -37,9 +38,6 @@ export const App: React.FC = () => {
     // Setup Native Alarm listener and Missed Alarm Diagnostics
     try {
       if ((window as any).Capacitor?.isNative) {
-        AlarmNotification.checkPermission().then((res: any) => {
-          if (!res.hasPermission) AlarmNotification.requestPermission();
-        });
         
         AlarmNotification.addListener('alarmAction', async (data: any) => {
           if (data.action === 'open' || data.action === 'dismiss' || data.action === 'snooze') {
@@ -184,6 +182,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200">
+      <PermissionsModal onAllGranted={() => console.log('All permissions granted')} />
       
       {/* Wake Challenge Overlay Modal */}
       {activeAlarm && (
