@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AlertTriangle, BellRing, Battery, ShieldAlert, CheckCircle2, RefreshCw } from 'lucide-react';
-import { AlarmNotification } from '@scalejet/capacitor-alarm-notification';
+import { AlertTriangle, BellRing, Battery, ShieldAlert, CheckCircle2, RefreshCw, Maximize, Layers } from 'lucide-react';
 import { AndroidSettings } from '../services/androidSettingsBridge';
 import { getPlatform } from '../services/alarmBridge';
 
@@ -11,6 +10,8 @@ export const PermissionsModal: React.FC<{ onAllGranted: () => void }> = ({ onAll
     notifications: true,
     exactAlarm: true,
     batteryOptimized: true,
+    fullScreenIntent: true,
+    systemAlertWindow: true,
   });
 
   const checkAll = async () => {
@@ -25,11 +26,18 @@ export const PermissionsModal: React.FC<{ onAllGranted: () => void }> = ({ onAll
       // Notification permission
       let notifRes = { hasPermission: true };
       try {
-        notifRes = await AlarmNotification.checkPermission();
+        if ('Notification' in window) {
+          notifRes.hasPermission = Notification.permission === 'granted';
+        }
       } catch(e) {}
       
       // Native settings
-      let nativeRes = { exactAlarm: true, batteryOptimization: true };
+      let nativeRes = { 
+        exactAlarm: true, 
+        batteryOptimization: true, 
+        fullScreenIntent: true, 
+        systemAlertWindow: true 
+      };
       try {
         nativeRes = await AndroidSettings.checkPermissions();
       } catch (e) {
@@ -40,11 +48,19 @@ export const PermissionsModal: React.FC<{ onAllGranted: () => void }> = ({ onAll
         notifications: notifRes.hasPermission || false,
         exactAlarm: nativeRes.exactAlarm,
         batteryOptimized: nativeRes.batteryOptimization,
+        fullScreenIntent: nativeRes.fullScreenIntent,
+        systemAlertWindow: nativeRes.systemAlertWindow,
       };
 
       setPerms(status);
 
-      if (status.notifications && status.exactAlarm && status.batteryOptimized) {
+      if (
+        status.notifications && 
+        status.exactAlarm && 
+        status.batteryOptimized && 
+        status.fullScreenIntent && 
+        status.systemAlertWindow
+      ) {
         onAllGranted();
       }
     } catch (e) {
@@ -67,7 +83,7 @@ export const PermissionsModal: React.FC<{ onAllGranted: () => void }> = ({ onAll
   }, []);
 
   if (loading || !isAndroid) return null;
-  if (perms.notifications && perms.exactAlarm && perms.batteryOptimized) return null;
+  if (perms.notifications && perms.exactAlarm && perms.batteryOptimized && perms.fullScreenIntent && perms.systemAlertWindow) return null;
 
   return (
     <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
@@ -95,7 +111,7 @@ export const PermissionsModal: React.FC<{ onAllGranted: () => void }> = ({ onAll
               </div>
             </div>
             {!perms.notifications && (
-              <button onClick={() => AlarmNotification.requestPermission().then(checkAll)} className="px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold rounded-lg transition">
+              <button onClick={() => { if ('Notification' in window) Notification.requestPermission().then(checkAll); }} className="px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold rounded-lg transition">
                 Allow
               </button>
             )}
@@ -132,6 +148,42 @@ export const PermissionsModal: React.FC<{ onAllGranted: () => void }> = ({ onAll
             </div>
             {!perms.batteryOptimized && (
               <button onClick={() => AndroidSettings.openBatteryOptimizationSettings()} className="px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold rounded-lg transition">
+                Fix
+              </button>
+            )}
+          </div>
+
+          {/* Full Screen Intent */}
+          <div className="flex items-center justify-between p-4 bg-slate-800/50 rounded-2xl border border-slate-700/50">
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-xl ${perms.fullScreenIntent ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-700 text-slate-400'}`}>
+                {perms.fullScreenIntent ? <CheckCircle2 size={20} /> : <Maximize size={20} />}
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white">Lock Screen Wake</h3>
+                <p className="text-[10px] text-slate-400">Allows turning screen on</p>
+              </div>
+            </div>
+            {!perms.fullScreenIntent && (
+              <button onClick={() => AndroidSettings.openFullScreenIntentSettings()} className="px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold rounded-lg transition">
+                Fix
+              </button>
+            )}
+          </div>
+
+          {/* System Alert Window */}
+          <div className="flex items-center justify-between p-4 bg-slate-800/50 rounded-2xl border border-slate-700/50">
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-xl ${perms.systemAlertWindow ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-700 text-slate-400'}`}>
+                {perms.systemAlertWindow ? <CheckCircle2 size={20} /> : <Layers size={20} />}
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white">Display Over Apps</h3>
+                <p className="text-[10px] text-slate-400">For popping up alarm screen</p>
+              </div>
+            </div>
+            {!perms.systemAlertWindow && (
+              <button onClick={() => AndroidSettings.openSystemAlertWindowSettings()} className="px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold rounded-lg transition">
                 Fix
               </button>
             )}

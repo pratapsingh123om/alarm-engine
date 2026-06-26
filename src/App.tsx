@@ -9,8 +9,9 @@ import { alarmBridge } from './services/alarmBridge';
 import type { Alarm } from './services/alarmBridge';
 import { soundPlayer } from './services/soundPlayer';
 import { ttsBridge } from './services/ttsBridge';
-import { AlarmNotification } from '@scalejet/capacitor-alarm-notification';
 import { PermissionsModal } from './components/PermissionsModal';
+import { registerPlugin } from '@capacitor/core';
+const AndroidLocalAlarm = registerPlugin<any>('AndroidLocalAlarm');
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'alarms' | 'tasks' | 'music'>('alarms');
@@ -39,19 +40,25 @@ export const App: React.FC = () => {
     try {
       if ((window as any).Capacitor?.isNative) {
         
-        AlarmNotification.addListener('alarmAction', async (data: any) => {
-          if (data.action === 'open' || data.action === 'dismiss' || data.action === 'snooze') {
-            const alarmId = data.notificationId || data.id;
-            if (alarmId) {
+        // Check for alarm intents when app wakes up
+        const checkAlarm = async () => {
+          try {
+            const data = await AndroidLocalAlarm.checkIntentExtras();
+            if (data.isAlarm && data.alarmId) {
               const alarms = await alarmBridge.getAlarms();
-              const ringing = alarms.find(a => a.id === alarmId);
+              const ringing = alarms.find(a => a.id === data.alarmId);
               if (ringing) {
                 setActiveAlarm(ringing);
                 const musicUrl = ringing.soundUrl || localStorage.getItem('awakure_music_url') || undefined;
                 soundPlayer.playAlarm(musicUrl);
               }
             }
-          }
+          } catch(e) {}
+        };
+        
+        checkAlarm();
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') checkAlarm();
         });
 
         // Diagnostics: Check if Android killed a past alarm

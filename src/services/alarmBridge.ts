@@ -12,7 +12,13 @@ export interface Alarm {
   soundUrl?: string;       // Custom ringtone URL
 }
 
-import { AlarmNotification } from '@scalejet/capacitor-alarm-notification';
+import { registerPlugin } from '@capacitor/core';
+
+export interface AndroidLocalAlarmPlugin {
+  setAlarm(options: { delay: number; title: string; message: string; id: string }): Promise<{ success: boolean; triggerTime: number }>;
+  cancelAlarm(options: { id: string }): Promise<{ success: boolean }>;
+}
+const AndroidLocalAlarm = registerPlugin<AndroidLocalAlarmPlugin>('AndroidLocalAlarm');
 
 const ALARMS_KEY = 'awakure_alarms';
 
@@ -74,32 +80,29 @@ export const alarmBridge = {
     const platform = getPlatform();
     if (platform === 'android') {
       try {
-        // The scalejet plugin cancelAlarm cancels all alarms. We resync them all.
-        await AlarmNotification.cancelAlarm();
+        // Sync the specific alarm
+        await AndroidLocalAlarm.cancelAlarm({ id: alarm.id }).catch(() => {});
         
-        const now = new Date();
-        for (const a of alarms) {
-          if (a.active) {
-            let targetDate = new Date();
-            targetDate.setHours(a.hour, a.minute, 0, 0);
-            
-            if (targetDate.getTime() <= now.getTime()) {
-              targetDate.setDate(targetDate.getDate() + 1);
-            }
-            
-            const delayMs = targetDate.getTime() - now.getTime();
-            
-            await AlarmNotification.setAlarm({
-              delay: delayMs,
-              title: 'Awakure Alarm',
-              message: a.label || 'Time to wake up!',
-              id: a.id,
-              openButtonText: 'Wake Up!'
-            });
+        if (alarm.active) {
+          const now = new Date();
+          let targetDate = new Date();
+          targetDate.setHours(alarm.hour, alarm.minute, 0, 0);
+          
+          if (targetDate.getTime() <= now.getTime()) {
+            targetDate.setDate(targetDate.getDate() + 1);
           }
+          
+          const delayMs = targetDate.getTime() - now.getTime();
+          
+          await AndroidLocalAlarm.setAlarm({
+            delay: delayMs,
+            title: 'Awakure Alarm',
+            message: alarm.label || 'Time to wake up!',
+            id: alarm.id
+          });
         }
       } catch (e) {
-        console.error('Failed to schedule alarm via AlarmNotification:', e);
+        console.error('Failed to schedule alarm via AndroidLocalAlarm:', e);
       }
     } else if (platform === 'desktop') {
       // Notify Tauri Rust background task
@@ -122,31 +125,9 @@ export const alarmBridge = {
     const platform = getPlatform();
     if (platform === 'android') {
       try {
-        await AlarmNotification.cancelAlarm();
-        
-        // Reschedule remaining active alarms
-        const now = new Date();
-        for (const a of updated) {
-          if (a.active) {
-            let targetDate = new Date();
-            targetDate.setHours(a.hour, a.minute, 0, 0);
-            
-            if (targetDate.getTime() <= now.getTime()) {
-              targetDate.setDate(targetDate.getDate() + 1);
-            }
-            
-            const delayMs = targetDate.getTime() - now.getTime();
-            await AlarmNotification.setAlarm({
-              delay: delayMs,
-              title: 'Awakure Alarm',
-              message: a.label || 'Time to wake up!',
-              id: a.id,
-              openButtonText: 'Wake Up!'
-            });
-          }
-        }
+        await AndroidLocalAlarm.cancelAlarm({ id });
       } catch (e) {
-        console.error('Failed to cancel/resync alarm on Android:', e);
+        console.error('Failed to cancel alarm on Android:', e);
       }
     } else if (platform === 'desktop') {
       try {
