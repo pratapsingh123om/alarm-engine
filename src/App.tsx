@@ -10,10 +10,12 @@ import type { Alarm } from './services/alarmBridge';
 import { soundPlayer } from './services/soundPlayer';
 import { ttsBridge } from './services/ttsBridge';
 import { PermissionsModal } from './components/PermissionsModal';
+import { AccountButton } from './components/AccountButton';
+import { CloudAccountProvider } from './context/CloudAccountProvider';
 import { registerPlugin } from '@capacitor/core';
 const AndroidLocalAlarm = registerPlugin<any>('AndroidLocalAlarm');
 
-export const AlarmApp: React.FC = () => {
+const AlarmAppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'alarms' | 'tasks' | 'music'>('alarms');
   const [activeAlarm, setActiveAlarm] = useState<Alarm | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -160,11 +162,6 @@ export const AlarmApp: React.FC = () => {
 
     // Turn off alarm if it does not repeat
     if (!finishedAlarm.repeat) {
-      const alarms = await alarmBridge.getAlarms();
-      const updated = alarms.map(a => 
-        a.id === finishedAlarm.id ? { ...a, active: false } : a
-      );
-      localStorage.setItem('awakure_alarms', JSON.stringify(updated));
       await alarmBridge.saveAlarm({ ...finishedAlarm, active: false });
       setTriggerListChange(prev => prev + 1);
     }
@@ -221,13 +218,17 @@ export const AlarmApp: React.FC = () => {
             </div>
           </div>
 
-          {/* Simple digital clock */}
-          <div className="text-right">
-            <div className="text-xl font-black text-white tabular-nums">
-              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-            </div>
-            <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
-              {currentTime.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}
+          <div className="flex items-center gap-3">
+            <AccountButton />
+
+            {/* Simple digital clock */}
+            <div className="text-right">
+              <div className="text-xl font-black text-white tabular-nums">
+                {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              </div>
+              <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                {currentTime.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}
+              </div>
             </div>
           </div>
         </header>
@@ -307,5 +308,11 @@ export const AlarmApp: React.FC = () => {
     </div>
   );
 };
+
+export const AlarmApp: React.FC = () => (
+  <CloudAccountProvider>
+    <AlarmAppContent />
+  </CloudAccountProvider>
+);
 
 export default AlarmApp;

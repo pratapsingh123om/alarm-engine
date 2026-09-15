@@ -3,6 +3,7 @@ import { Plus, Trash2, Clock, Bell, BellOff, X, Edit2, Camera, ShieldAlert, Chec
 import { alarmBridge } from '../services/alarmBridge';
 import type { Alarm } from '../services/alarmBridge';
 import { STATIC_RINGTONES } from './MusicSelector';
+import { CLOUD_DATA_APPLIED_EVENT } from '../services/cloudSync';
 
 interface AlarmsListProps {
   onAlarmsChanged: () => void;
@@ -49,8 +50,10 @@ export const AlarmsList: React.FC<AlarmsListProps> = ({ onAlarmsChanged }) => {
       } catch(e) {}
     };
     loadTunes();
+    window.addEventListener(CLOUD_DATA_APPLIED_EVENT, fetchAlarms);
 
     return () => {
+      window.removeEventListener(CLOUD_DATA_APPLIED_EVENT, fetchAlarms);
       stopCamera();
     };
   }, []);

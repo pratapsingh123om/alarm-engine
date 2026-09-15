@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Volume2, CheckCircle, Circle, RefreshCw } from 'lucide-react';
 import { ttsBridge } from '../services/ttsBridge';
+import { CLOUD_DATA_APPLIED_EVENT, markLocalDataChanged } from '../services/cloudSync';
 
 export interface Task {
   id: string;
@@ -16,15 +17,23 @@ export const TasksPanel: React.FC = () => {
   const [announcing, setAnnouncing] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem(TASKS_KEY);
-    if (stored) {
-      setTasks(JSON.parse(stored));
-    }
+    const loadTasks = () => {
+      try {
+        const stored = localStorage.getItem(TASKS_KEY);
+        setTasks(stored ? JSON.parse(stored) : []);
+      } catch {
+        setTasks([]);
+      }
+    };
+    loadTasks();
+    window.addEventListener(CLOUD_DATA_APPLIED_EVENT, loadTasks);
+    return () => window.removeEventListener(CLOUD_DATA_APPLIED_EVENT, loadTasks);
   }, []);
 
   const saveTasks = (updated: Task[]) => {
     setTasks(updated);
     localStorage.setItem(TASKS_KEY, JSON.stringify(updated));
+    markLocalDataChanged();
   };
 
   const addTask = (e: React.FormEvent) => {

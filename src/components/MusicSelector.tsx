@@ -4,6 +4,7 @@ import { soundPlayer } from '../services/soundPlayer';
 import { ttsBridge } from '../services/ttsBridge';
 import localforage from 'localforage';
 import { localTTS } from '../services/LocalTTS';
+import { CLOUD_DATA_APPLIED_EVENT, markLocalDataChanged } from '../services/cloudSync';
 
 export interface Ringtone {
   id: string;
@@ -85,6 +86,13 @@ export const MusicSelector: React.FC = () => {
     if (storedVoiceName) {
       setSelectedVoice(storedVoiceName);
     }
+
+    const loadCloudPreferences = () => {
+      setSelectedId(localStorage.getItem('awakure_ringtone_id') || 'synth_alarm');
+      setSelectedVoice(localStorage.getItem('awakure_tts_voice_name') || '');
+    };
+    window.addEventListener(CLOUD_DATA_APPLIED_EVENT, loadCloudPreferences);
+    return () => window.removeEventListener(CLOUD_DATA_APPLIED_EVENT, loadCloudPreferences);
   }, []);
 
   const loadCustomVoiceNotes = async () => {
@@ -119,6 +127,7 @@ export const MusicSelector: React.FC = () => {
     } else {
       localStorage.removeItem('awakure_music_url');
     }
+    markLocalDataChanged();
   };
 
   const handleTest = (ringtone: Ringtone) => {
@@ -217,6 +226,7 @@ export const MusicSelector: React.FC = () => {
     const val = e.target.value;
     setSelectedVoice(val);
     localStorage.setItem('awakure_tts_voice_name', val);
+    markLocalDataChanged();
   };
 
   const testVoiceSpeech = async () => {

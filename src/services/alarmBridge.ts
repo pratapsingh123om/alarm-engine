@@ -1,3 +1,6 @@
+import { markLocalDataChanged } from './cloudSync';
+import { registerPlugin } from '@capacitor/core';
+
 export interface Alarm {
   id: string;
   hour: number;      // 0-23
@@ -11,8 +14,6 @@ export interface Alarm {
   pushupDuration?: number; // e.g. 60 seconds
   soundUrl?: string;       // Custom ringtone URL
 }
-
-import { registerPlugin } from '@capacitor/core';
 
 export interface AndroidLocalAlarmPlugin {
   setAlarm(options: { delay: number; title: string; message: string; id: string }): Promise<{ success: boolean; triggerTime: number }>;
@@ -76,6 +77,7 @@ export const alarmBridge = {
     }
     
     localStorage.setItem(ALARMS_KEY, JSON.stringify(alarms));
+    markLocalDataChanged();
     
     const platform = getPlatform();
     if (platform === 'android') {
@@ -121,6 +123,7 @@ export const alarmBridge = {
     const alarms = await this.getAlarms();
     const updated = alarms.filter(a => a.id !== id);
     localStorage.setItem(ALARMS_KEY, JSON.stringify(updated));
+    markLocalDataChanged();
     
     const platform = getPlatform();
     if (platform === 'android') {
