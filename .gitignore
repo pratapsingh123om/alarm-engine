@@ -26,7 +26,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# AI and Agent files
+# Ignored files
 .agents/
 *.skill.md
 skills-lock.json
