@@ -13,7 +13,7 @@ import { PermissionsModal } from './components/PermissionsModal';
 import { registerPlugin } from '@capacitor/core';
 const AndroidLocalAlarm = registerPlugin<any>('AndroidLocalAlarm');
 
-export const App: React.FC = () => {
+export const AlarmApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'alarms' | 'tasks' | 'music'>('alarms');
   const [activeAlarm, setActiveAlarm] = useState<Alarm | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -281,6 +281,9 @@ export const App: React.FC = () => {
 
       {/* Footer Branding */}
       <footer className="w-full text-center py-6 border-t border-slate-950 flex flex-col items-center gap-3">
+        <a href="./" className="text-xs font-bold text-indigo-400 hover:text-indigo-300 transition">
+          ← Back to Awakure website
+        </a>
         <button
           onClick={() => {
             try {
@@ -305,4 +308,4 @@ export const App: React.FC = () => {
   );
 };
 
-export default App;
+export default AlarmApp;
