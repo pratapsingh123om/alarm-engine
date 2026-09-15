@@ -106,7 +106,6 @@ const AlarmAppContent: React.FC = () => {
 
   // Alarm checker loop
   useEffect(() => {
-    let checkTimer: any;
     
     const checkAlarms = async () => {
       if (activeAlarm) return; // Already ringing
@@ -146,7 +145,7 @@ const AlarmAppContent: React.FC = () => {
 
     // Check immediately and then schedule every second
     checkAlarms();
-    checkTimer = setInterval(checkAlarms, 1000);
+    const checkTimer = setInterval(checkAlarms, 1000);
 
     return () => clearInterval(checkTimer);
   }, [activeAlarm, triggerListChange]);

@@ -87,7 +87,7 @@ export const alarmBridge = {
         
         if (alarm.active) {
           const now = new Date();
-          let targetDate = new Date();
+          const targetDate = new Date();
           targetDate.setHours(alarm.hour, alarm.minute, 0, 0);
           
           if (targetDate.getTime() <= now.getTime()) {

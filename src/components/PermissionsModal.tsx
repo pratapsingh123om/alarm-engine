@@ -24,7 +24,7 @@ export const PermissionsModal: React.FC<{ onAllGranted: () => void }> = ({ onAll
       setIsAndroid(true);
 
       // Notification permission
-      let notifRes = { hasPermission: true };
+      const notifRes = { hasPermission: true };
       try {
         if ('Notification' in window) {
           notifRes.hasPermission = Notification.permission === 'granted';

@@ -46,21 +46,6 @@ export const WakeChallenge: React.FC<WakeChallengeProps> = ({
   const [calibratedBrightness, setCalibratedBrightness] = useState<number | null>(null);
   const [currentBrightness, setCurrentBrightness] = useState(0);
 
-  // Initialize Challenges
-  useEffect(() => {
-    if (challengeType === 'math') {
-      generateMathProblem();
-    } else if (challengeType === 'photo' || challengeType === 'pushup') {
-      startCamera();
-    } else if (challengeType === 'motion') {
-      setupMotionTracking();
-    }
-
-    return () => {
-      stopCamera();
-      cleanupMotionTracking();
-    };
-  }, [challengeType]);
 
   // --- CAMERA HELPERS ---
   const startCamera = async () => {
@@ -240,6 +225,22 @@ export const WakeChallenge: React.FC<WakeChallengeProps> = ({
       motionLastForceRef.current = magnitude;
     }
   };
+
+  // Initialize Challenges
+  useEffect(() => {
+    if (challengeType === 'math') {
+      generateMathProblem();
+    } else if (challengeType === 'photo' || challengeType === 'pushup') {
+      startCamera();
+    } else if (challengeType === 'motion') {
+      setupMotionTracking();
+    }
+
+    return () => {
+      stopCamera();
+      cleanupMotionTracking();
+    };
+  }, [challengeType]);
 
   // Desktop Camera Motion Detector loop (analyzes raw camera frame changes)
   useEffect(() => {
